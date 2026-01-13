@@ -10,11 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@monaco-editor/react": "^4.7.0",
     "@tailwindcss/vite": "^4.1.18",
     "@tiptap/extension-code-block-lowlight": "^3.15.3",
     "@tiptap/extension-color": "^3.15.3",
     "@tiptap/extension-image": "^3.15.3",
+    "@tiptap/extension-link": "^3.15.3",
+    "@tiptap/extension-text-align": "^3.15.3",
     "@tiptap/extension-text-style": "^3.15.3",
     "@tiptap/extension-underline": "^3.15.3",
     "@tiptap/pm": "^3.15.3",
@@ -23,9 +24,11 @@
     "axios": "^1.13.2",
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
+    "lucide-react": "^0.562.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-router-dom": "^7.11.0",
+    "shiki": "^3.21.0",
     "tailwindcss": "^4.1.18"
   },
   "overrides": {

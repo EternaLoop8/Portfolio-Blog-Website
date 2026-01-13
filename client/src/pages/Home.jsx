@@ -2,10 +2,12 @@ import React from 'react';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import Logo from "../assets/Logo.png";
+import Login from '../components/Login.jsx';
 
 const Home = () => {
   return (
     <div className='bg-black text-white'>
+      <Login />
       <Navbar />
       <section className='min-h-screen flex flex-col items-center justify-center text-center px-6'>
         

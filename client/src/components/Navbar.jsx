@@ -24,8 +24,8 @@ const Navbar = () => {
                     onClick={() => navigate("/")}>
                         Home
                 </li>
-                <li className={styles("/blogs")}
-                    onClick={() => navigate("/blogs")}>
+                <li className={styles("/blog")}
+                    onClick={() => navigate("/blog")}>
                         Blogs
                 </li>
                 <li className={styles("/projects")}

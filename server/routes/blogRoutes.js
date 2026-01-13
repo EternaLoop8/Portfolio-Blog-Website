@@ -1,11 +1,11 @@
 import express from "express"  ;
 import { Blog } from "../models/blog.model.js";
 
-const router = express.Router();
+const blogrouter = express.Router();
 
 
 //get all blogs
-router.get('/get-all-blogs', async (req, res) => {
+blogrouter.get('/blog', async (req, res) => {
   try{
     const blogs = await Blog.find({});
     res.send({count:blogs.length, data:blogs});
@@ -19,7 +19,7 @@ router.get('/get-all-blogs', async (req, res) => {
 });
 
 //get single blog
-router.get('/blog/:id', async (req,res)=>{
+blogrouter.get('/blog/:id', async (req,res)=>{
     try{
         const id = req.params.id;
         const response = await Blog.findById(id);
@@ -32,24 +32,23 @@ router.get('/blog/:id', async (req,res)=>{
 })
 
 //update a blog
-router.put('/blog/:id', async(req, res)=>{
+blogrouter.put('/blog/:id', async(req, res)=>{
     try{
         const id = req.params.id;
         const data = req.body;
-        const response = await Blog.findByIdAndUpdate(id, data,{returnOriginal:false});
-        console.group(response);
+        const response = await Blog.findByIdAndUpdate(id, data,{ new: true });
+        console.log(response);
         res.send(response);
     }catch(err){
         console.log(err);
         res.status(400).send({message:"something went wrong!"});
     }
-})
+});
 
 //delete blog
-router.delete('/blog/:id', async(req, res)=>{
+blogrouter.delete('/blog/:id', async(req, res)=>{
     try{
         const id = req.params.id;
-        const data = req.body;
         const response = await Blog.findByIdAndDelete(id);
         console.log(response);
         res.send("success!");
@@ -57,9 +56,10 @@ router.delete('/blog/:id', async(req, res)=>{
         console.log(err);
         res.status(400).send({message:"something went wrong!"});
     }
-})
+});
+
 //create blog
-router.post('/create-blog', async (req,res)=>{
+blogrouter.post('/blog', async (req,res)=>{
     try{
         const data = req.body;
         const blog = new Blog(data)
@@ -73,6 +73,6 @@ router.post('/create-blog', async (req,res)=>{
             error: err.message
         });
     }
-})
+});
 
-export default router;
+export default blogrouter;
