@@ -4,18 +4,10 @@ const{Schema} = mongoose;
 
 const blogSchema = new Schema(
     {
-    title: {
-      type: String,
-      required: true,
-    },
-    content: {
-      type: String, // TipTap HTML
-      required: true,
-    },
-    author: {
-      type: String,
-      default: "Admin",
-    },
+    title: { type: String, required: true },
+    subtitle: { type: String }, 
+    content: { type: String, required: true },
+    author: { type: String, default: "Admin" },
     status: {
       type: String,
       enum: ["draft", "published"],

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import API from "../api";
 
+
 const ProjectContent = () => {
 
   const { id } = useParams();
@@ -33,7 +34,7 @@ const ProjectContent = () => {
 
       <div className="prose max-w-none">
           <p>
-            {project.description}
+            {project.content}
           </p>
       </div>
     </div>

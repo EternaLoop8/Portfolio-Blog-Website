@@ -1,16 +1,28 @@
 import { useEffect, useState } from "react";
-import { codeToHtml } from "shiki";
+import { getShikiHighlighter } from "./Highlighter";
 import { Copy, Check } from "lucide-react";
 
-const CodeBlock = ({ code, lang = "cpp" }) => {
+const CodeBlock = ({ code = "", lang = "cpp" }) => {
   const [html, setHtml] = useState("");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    codeToHtml(code, {
-      lang,
-      theme: "github-dark",
-    }).then(setHtml);
+    let mounted = true;
+
+    getShikiHighlighter().then((highlighter) => {
+      if (!mounted) return;
+
+      const result = highlighter.codeToHtml(code, {
+        lang,
+        theme: "github-dark",
+      });
+
+      setHtml(result);
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, [code, lang]);
 
   const copyCode = async () => {
@@ -20,7 +32,7 @@ const CodeBlock = ({ code, lang = "cpp" }) => {
   };
 
   return (
-    <div className="border border-slate-700 rounded-b-lg bg-slate-900">
+    <div className="border border-slate-700 rounded-lg overflow-hidden bg-slate-900">
       <div className="flex justify-between px-3 py-2 bg-slate-800 text-xs text-gray-300">
         <span>{lang}</span>
         <button onClick={copyCode} className="flex gap-1">

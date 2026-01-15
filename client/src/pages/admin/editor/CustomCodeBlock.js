@@ -1,3 +1,4 @@
+// CustomCodeBlock.js
 import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import EditorCodeBlock from "./EditorCodeBlock";
@@ -5,8 +6,8 @@ import EditorCodeBlock from "./EditorCodeBlock";
 const CustomCodeBlock = Node.create({
   name: "codeBlock",
   group: "block",
-  content: "text*",
-  defining: true,
+  atom: true,
+  draggable: true,
 
   addAttributes() {
     return {
@@ -28,7 +29,13 @@ const CustomCodeBlock = Node.create({
       toggleCodeBlock:
         () =>
         ({ commands }) =>
-          commands.insertContent({ type: "codeBlock" }),
+          commands.insertContent({
+            type: "codeBlock",
+            attrs: {
+              code: "// start coding",
+              lang: "cpp",
+            },
+          }),
     };
   },
 
