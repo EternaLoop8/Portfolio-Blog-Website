@@ -58,21 +58,47 @@ projectrouter.delete('/project/:id', async (req, res) => {
 });
 
 //create blog
-projectrouter.post('/project', async (req, res) => {
-    try{
+// Example improvement for your routes
+    projectrouter.post('/project', async (req, res) => {
+    try {
         const data = req.body;
+        
+        // Validation
+        if (!data.title || !data.content) {
+            return res.status(400).send({
+                message: "Title and content are required"
+            });
+        }
+        
         const project = new Project(data);
         const response = await project.save();
-        console.log(response);
-        res.send(response);
-    }catch(err){
+        
+        res.status(201).send({
+            message: "Project created successfully",
+            data: response
+        });
+    } catch (err) {
         console.error("Mongoose Error:", err);
         res.status(400).send({
-            message: "something went wrong!",
+            message: "Failed to create project",
             error: err.message
         });
     }
 });
+
+projectrouter.patch("/project/:id/publish", async (req, res) => {
+  try {
+    const project = await Project.findByIdAndUpdate(
+      req.params.id,
+      { status: "published" },
+      { new: true }
+    );
+    res.send(project);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
 
 export default projectrouter;
 

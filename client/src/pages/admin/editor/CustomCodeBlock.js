@@ -5,16 +5,13 @@ import EditorCodeBlock from "./EditorCodeBlock";
 const CustomCodeBlock = Node.create({
   name: "codeBlock",
   group: "block",
-  atom: true,
+  content: "text*",
+  defining: true,
 
   addAttributes() {
     return {
-      code: {
-        default: "",
-      },
-      lang: {
-        default: "cpp",
-      },
+      code: { default: "" },
+      lang: { default: "cpp" },
     };
   },
 
@@ -24,6 +21,15 @@ const CustomCodeBlock = Node.create({
 
   renderHTML({ HTMLAttributes }) {
     return ["code-block", mergeAttributes(HTMLAttributes)];
+  },
+
+  addCommands() {
+    return {
+      toggleCodeBlock:
+        () =>
+        ({ commands }) =>
+          commands.insertContent({ type: "codeBlock" }),
+    };
   },
 
   addNodeView() {

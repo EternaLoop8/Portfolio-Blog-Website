@@ -23,7 +23,7 @@ const BlogContent = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
-      <Link to="/blogs" className="text-blue-600 hover:underline mb-5 inline-block">
+      <Link to="/blog" className="text-blue-600 hover:underline mb-5 inline-block">
         &larr; Back to Posts
       </Link>
 

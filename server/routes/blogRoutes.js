@@ -75,4 +75,18 @@ blogrouter.post('/blog', async (req,res)=>{
     }
 });
 
+//Publish draft
+blogrouter.patch("/blog/:id/publish", async (req, res) => {
+  try {
+    const blog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { status: "published" },
+      { new: true }
+    );
+    res.send(blog);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
 export default blogrouter;
