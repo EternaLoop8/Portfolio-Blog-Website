@@ -21,6 +21,7 @@ const Editor = () => {
   const [subtitle, setSubtitle] = useState("");
   const [techStack, setTechStack] = useState("");
   const [content, setContent] = useState(""); // This will hold the HTML string
+  const [docId, setDocId] = useState(null); // ✅ MUST BE HERE
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -58,41 +59,57 @@ const Editor = () => {
 
   if (!editor) return null;
 
-  const handleSave = async (status) => {
-    if (!title.trim()) return setError("Please enter a title");
+const saveContent = async (status) => {
+  if (!title.trim()) return setError("Please enter a title");
+  if (editor.getText().trim().length === 0)
+    return setError("Content is required");
 
-    // Check text length to ensure it's not just empty <p> tags
-    if (editor.getText().trim().length === 0) {
-      return setError("Content is required");
-    }
+  setLoading(true);
+  setError("");
 
-    setLoading(true);
-    setError("");
-
-    try {
-      const payload = {
-        title: title.trim(),
-        subtitle: subtitle.trim(),
-        content: content, // Now using the state updated by onUpdate
-        status: status,
-        ...(!isBlog && {
-          techStack: techStack
-            .split(",")
-            .map((s) => s.trim())
-            .filter((s) => s !== ""),
-        }),
-      };
-
-      await API.post(API_ENDPOINT, payload);
-
-      alert(`✅ Successfully saved as ${status}!`);
-      if (status === "published") navigate("/admin/dashboard");
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || "Save failed.");
-    } finally {
-      setLoading(false);
-    }
+  const payload = {
+    title: title.trim(),
+    subtitle: subtitle.trim(),
+    content,
+    techStack: !isBlog
+      ? techStack.split(",").map(s => s.trim()).filter(Boolean)
+      : undefined,
   };
+
+  try {
+    let currentDocId = docId;
+
+    // 1️⃣ CREATE if not exists
+    if (!currentDocId) {
+      const res = await API.post(API_ENDPOINT, payload);
+      currentDocId = res.data._id;
+      setDocId(currentDocId); // keep state in sync
+    }
+
+    // 2️⃣ SAVE DRAFT
+    if (status === "draft") {
+      await API.put(`${API_ENDPOINT}/${currentDocId}`, payload);
+      alert("✅ Draft saved");
+      return;
+    }
+
+    // 3️⃣ PUBLISH
+    if (status === "published") {
+      await API.put(`${API_ENDPOINT}/${currentDocId}`, payload);
+      await API.patch(`${API_ENDPOINT}/${currentDocId}/publish`);
+      alert("🚀 Published");
+      navigate("/admin/dashboard");
+    }
+
+  } catch (err) {
+    console.error(err);
+    setError(err.response?.data?.message || "Save failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   const Btn = ({ onClick, active, children, title }) => (
     <button
@@ -120,14 +137,14 @@ const Editor = () => {
           </button>
           <div className="flex gap-3">
             <button
-              onClick={() => handleSave("draft")}
+              onClick={() => saveContent("draft")}
               disabled={loading}
               className="px-4 py-2 bg-slate-700 rounded-lg text-white hover:bg-slate-600 disabled:opacity-50"
             >
               Save Draft
             </button>
             <button
-              onClick={() => handleSave("published")}
+              onClick={() => saveContent("published")}
               disabled={loading}
               className="px-4 py-2 bg-blue-600 rounded-lg text-white hover:bg-blue-500 disabled:opacity-50 font-bold"
             >
@@ -175,6 +192,12 @@ const Editor = () => {
 
         {/* TOOLBAR */}
         <div className="flex flex-wrap gap-2 px-6 py-3 mt-6 bg-slate-800/50 border-y border-slate-700">
+          <Btn onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()}>Undo</Btn>
+          <Btn onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()}>Redo</Btn>
+          <Btn onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive('strike')}>S</Btn>
+          <Btn onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}>Clear</Btn>
+          <Btn onClick={() => editor.chain().focus().toggleBlockquote().run()} active={editor.isActive('blockquote')}>Quote</Btn>
+
           <Btn
             onClick={() => editor.chain().focus().toggleBold().run()}
             active={editor.isActive("bold")}
@@ -195,6 +218,22 @@ const Editor = () => {
           </Btn>
           <Btn
             onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+            }
+            active={editor.isActive("heading", { level: 1 })}
+          >
+            H1
+            </Btn>
+            <Btn
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+            }
+            active={editor.isActive("heading", { level: 2 })}
+          >
+            H2
+            </Btn>
+          <Btn
+            onClick={() =>
               editor.chain().focus().toggleHeading({ level: 3 }).run()
             }
             active={editor.isActive("heading", { level: 3 })}
@@ -207,6 +246,36 @@ const Editor = () => {
             active={editor.isActive("bulletList")}
           >
             • List
+          </Btn>
+          <Btn
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            active={editor.isActive("orderedList")}
+          >
+            1.  List
+          </Btn>
+          <Btn
+            onClick={() => editor.chain().focus().setHorizontalRule().run()}
+            active={editor.isActive("horizontalRule")}
+          >
+            separator
+          </Btn>
+          <Btn
+            onClick={() => editor.chain().focus().setTextAlign('left').run()}
+            active={editor.isActive({ textAlign: 'left' })}
+          >
+            left
+          </Btn>
+          <Btn
+            onClick={() => editor.chain().focus().setTextAlign('center').run()}
+            active={editor.isActive({ textAlign: 'center' })}
+          >
+            center
+          </Btn>
+          <Btn
+            onClick={() => editor.chain().focus().setTextAlign('right').run()}
+            active={editor.isActive({ textAlign: 'right' })}
+          >
+            right
           </Btn>
           <button
             onClick={() => editor.chain().focus().toggleCodeBlock().run()}

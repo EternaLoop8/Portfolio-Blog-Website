@@ -35,7 +35,7 @@ const CodeBlock = ({ code = "", lang = "cpp" }) => {
     <div className="border border-slate-700 rounded-lg overflow-hidden bg-slate-900">
       <div className="flex justify-between px-3 py-2 bg-slate-800 text-xs text-gray-300">
         <span>{lang}</span>
-        <button onClick={copyCode} className="flex gap-1">
+        <button onClick={copyCode} className="flex gap-1 cursor-pointer">
           {copied ? <Check size={14} /> : <Copy size={14} />}
           {copied ? "Copied" : "Copy"}
         </button>

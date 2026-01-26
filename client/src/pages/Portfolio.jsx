@@ -63,7 +63,9 @@ const Portfolio = () => {
             </div>
 
             <div className="mt-10 pt-8 border-t border-slate-100 flex flex-wrap gap-4">
-              <button className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all active:scale-95">
+              <button 
+                onClick={() => navigate("https://www.linkedin.com/in/eternaloop/")}
+                className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all active:scale-95">
                 Get In Touch
               </button>
               <button 

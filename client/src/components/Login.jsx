@@ -1,50 +1,66 @@
 import React, { useState } from "react";
-import { User, X, Mail, LogOut, LayoutDashboard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { User, X, LogOut, LayoutDashboard, Mail } from "lucide-react";
+import API from "../api.js"; // Axios instance with baseURL
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [role, setRole] = useState(localStorage.getItem("role"));
+  const [userEmail, setUserEmail] = useState(localStorage.getItem("email"));
 
-  const role = localStorage.getItem("role");
-  const token = localStorage.getItem("token");
-
-  /* LOGIN */
+  /* ===== LOGIN ===== */
   const login = async () => {
+    if (!email || !password) return alert("Please enter email and password");
+
     try {
-      const res = await fetch("/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const { data } = await API.post("/auth/login", { email, password });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
-
+      // Store JWT & user info
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.user.role);
       localStorage.setItem("email", data.user.email);
 
+      setToken(data.token);
+      setRole(data.user.role);
+      setUserEmail(data.user.email);
+
       setOpen(false);
+      setEmail("");
+      setPassword("");
+
+      alert("Login successful!");
+
+      // Redirect admin to dashboard
+      if (data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      }
     } catch (err) {
-      alert(err.message);
+      console.error(err.response?.data || err.message);
+      alert(err.response?.data?.message || "Login failed");
     }
   };
 
-  /* LOGOUT */
+  /* ===== LOGOUT ===== */
   const logout = () => {
     localStorage.clear();
+    setToken(null);
+    setRole(null);
+    setUserEmail(null);
     setProfileOpen(false);
+    navigate("/"); // optional: redirect to home
   };
 
   return (
-    <div className="relative flex justify-end top-6 right-3">
+    <div className="fixed flex justify-end top-6 right-3">
       {/* PROFILE / LOGIN BUTTON */}
       <button
-        onClick={() =>
-          token ? setProfileOpen(!profileOpen) : setOpen(true)
-        }
+        onClick={() => (token ? setProfileOpen(!profileOpen) : setOpen(true))}
         className="w-10 h-10 flex items-center justify-center rounded-full bg-neutral-800 hover:bg-neutral-700 transition"
       >
         <User className="text-white" size={20} />
@@ -54,11 +70,14 @@ const Login = () => {
       {profileOpen && token && (
         <div className="absolute right-0 top-12 w-56 bg-neutral-900 text-white rounded-xl shadow-lg border border-neutral-800">
           <div className="px-4 py-3 border-b border-neutral-800 text-sm">
-            {localStorage.getItem("email")}
+            {userEmail}
           </div>
 
           {role === "admin" && (
-            <button className="w-full flex items-center gap-2 px-4 py-2 hover:bg-neutral-800">
+            <button
+              onClick={() => navigate("/admin/dashboard")}
+              className="w-full flex items-center gap-2 px-4 py-2 hover:bg-neutral-800"
+            >
               <LayoutDashboard size={16} />
               Admin Dashboard
             </button>

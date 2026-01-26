@@ -30,14 +30,24 @@ const Projects = () => {
         Projects
       </h1>
 
-      <ol>
+      <ol 
+        className="space-y-4 list-decimal pl-6"
+        start = {startIndex + 1}
+      >
         {paginatedProjects.map((project) => (
           <li key={project._id} className="text-xl">
             <Link
               to = {`/projects/${project._id}`}
-              className='text-blue-600 hover:underline'
+              className='text-blue-900'
             >
-              {project.title}, {project.techStack}
+              <p className='leading-tight'>
+               <span className='hover:underline'>{project.title}</span> 
+                <br />
+                <span 
+                  className='text-gray-600 font-light text-sm'>
+                    {project.techStack}
+                </span> 
+              </p>
             </Link>
           </li>
           

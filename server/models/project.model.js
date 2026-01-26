@@ -9,7 +9,7 @@ const projectSchema = new Schema(
       required: true,
     },
     content: {
-      type: String, // TipTap HTML
+      type: String, 
       required: true,
     },
     techStack: [{ type: String }],

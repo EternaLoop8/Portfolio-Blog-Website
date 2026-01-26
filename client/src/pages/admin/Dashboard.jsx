@@ -34,12 +34,12 @@ export default function Dashboard() {
   /* ---------------- NAVIGATION HELPERS ---------------- */
   const handleOpen = (type, id) => {
     // Navigates to the public view
-    navigate(`/${type}/${id}`);
+    navigate(`/${type}s/${id}`);
   };
 
   const handleEdit = (e, type, id) => {
     e.stopPropagation(); // Prevents triggering the parent div's onClick
-    navigate(`/admin/edit/${type}/${id}`);
+    navigate(`/${type}s/edit/${id}`);
   };
 
   /* ---------------- DELETE HANDLERS ---------------- */
@@ -51,6 +51,7 @@ export default function Dashboard() {
       if (type === "blog") setBlogs(prev => prev.filter(b => b._id !== id));
       else setProjects(prev => prev.filter(p => p._id !== id));
       alert(`✅ ${type} deleted successfully`);
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       alert(`❌ Failed to delete ${type}`);
     }
@@ -65,10 +66,10 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-4 md:p-8">
+    <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <header className="mb-10">
-          <h1 className="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-black bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             Admin Dashboard
           </h1>
           <p className="text-slate-400">Manage your blogs and projects</p>

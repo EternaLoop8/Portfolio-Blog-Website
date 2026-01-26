@@ -31,7 +31,10 @@ const Blogs = () => {
         Posts
       </h1>
 
-      <ol className="space-y-4 list-decimal pl-6">
+      <ol 
+        className="space-y-4 list-decimal pl-6" 
+        start = {startIndex + 1}
+      >
         {paginatedBlogs.map((blog) => (
           <li key={blog._id} className="text-xl">
             {/* ✅ Wrap title in Link */}

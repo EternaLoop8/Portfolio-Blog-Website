@@ -3,10 +3,14 @@ import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import Logo from "../assets/Logo.png";
 import Login from '../components/Login.jsx';
+import ThemeToggle from '../components/ThemeToggle.jsx';
 
 const Home = () => {
   return (
     <div className='bg-black text-white'>
+      <div className="fixed top-6 right-14 z-50 flex items-center gap-4">
+        <ThemeToggle />
+        </div>
       <Login />
       <Navbar />
       <section className='min-h-screen flex flex-col items-center justify-center text-center px-6'>

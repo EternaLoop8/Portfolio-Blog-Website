@@ -1,5 +1,7 @@
 import express from "express"  ;
 import { Blog } from "../models/blog.model.js";
+import { protect } from "../middleware/auth.middleware.js";
+import { adminOnly } from "../middleware/role.middleware.js";
 
 const blogrouter = express.Router();
 
@@ -32,21 +34,22 @@ blogrouter.get('/blog/:id', async (req,res)=>{
 })
 
 //update a blog
-blogrouter.put('/blog/:id', async(req, res)=>{
-    try{
-        const id = req.params.id;
-        const data = req.body;
-        const response = await Blog.findByIdAndUpdate(id, data,{ new: true });
-        console.log(response);
-        res.send(response);
-    }catch(err){
-        console.log(err);
-        res.status(400).send({message:"something went wrong!"});
-    }
+blogrouter.put("/blog/:id", protect, adminOnly, async (req, res) => {
+  try {
+    const { status, ...safeData } = req.body; // ⛔ ignore status
+    const blog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      safeData,
+      { new: true }
+    );
+    res.send(blog);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
 });
 
 //delete blog
-blogrouter.delete('/blog/:id', async(req, res)=>{
+blogrouter.delete('/blog/:id', protect, adminOnly, async(req, res)=>{
     try{
         const id = req.params.id;
         const response = await Blog.findByIdAndDelete(id);
@@ -59,9 +62,10 @@ blogrouter.delete('/blog/:id', async(req, res)=>{
 });
 
 //create blog
-blogrouter.post('/blog', async (req,res)=>{
+blogrouter.post('/blog', protect, adminOnly, async (req,res)=>{
     try{
         const data = req.body;
+        data.author = req.user.id;
         const blog = new Blog(data)
         const response = await blog.save();
         console.log(response);
@@ -76,7 +80,7 @@ blogrouter.post('/blog', async (req,res)=>{
 });
 
 //Publish draft
-blogrouter.patch("/blog/:id/publish", async (req, res) => {
+blogrouter.patch("/blog/:id/publish", protect, adminOnly, async (req, res) => {
   try {
     const blog = await Blog.findByIdAndUpdate(
       req.params.id,
