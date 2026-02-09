@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://portfolio-blog-website-5m1i.onrender.com/api",
+  baseURL: "https://portfolio-blog-website-5m1i.onrender.com",
 });
 
 // Add JWT automatically to all requests
