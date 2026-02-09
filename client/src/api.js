@@ -1,5 +1,4 @@
 import axios from "axios";
-import "dotenv/config";
 
 const API = axios.create({
   baseURL: "https://portfolio-blog-website-5m1i.onrender.com/api",
