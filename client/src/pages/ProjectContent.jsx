@@ -56,8 +56,7 @@ const ProjectContent = () => {
     /* This outer div ensures the entire page background is black */
     /* Main wrapper: Deepest background */
     <div className="bg-[#0f0f0f] min-h-screen w-full py-12 px-6">
-      /* Content Card: Slightly lighter background with a subtle border for
-      depth */
+      
       <div className="bg-[#1a1a1a] max-w-4xl mx-auto p-8 md:p-12 rounded-2xl border border-zinc-800 shadow-2xl">
         {/* Muted link with hover transition */}
         <Link
