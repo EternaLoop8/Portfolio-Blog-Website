@@ -148,7 +148,7 @@ export default function EditBlog() {
         </div>
 
         {/* Editor */}
-        <div className="bg-slate-900 min-h-[500px]">
+        <div className="bg-slate-900 min-h-125">
           <EditorContent editor={editor} />
         </div>
       </div>
