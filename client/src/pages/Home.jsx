@@ -8,10 +8,11 @@ import ThemeToggle from '../components/ThemeToggle.jsx';
 const Home = () => {
   return (
     <div className='bg-black text-white'>
-      <div className="fixed top-6 right-14 z-50 flex items-center gap-4 ">
+      <div className="hidden sm:flex fixed top-6 right-1 z-60 items-center gap-3">
         <ThemeToggle />
+        <Login />
         </div>
-      <Login />
+
       <Navbar />
       <section className='min-h-screen flex flex-col items-center justify-center text-center px-6'>
         

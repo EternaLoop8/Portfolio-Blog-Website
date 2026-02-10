@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Login from "./Login";
+import ThemeToggle from "./ThemeToggle";
+import { Menu, X } from "lucide-react"; // Import icons
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // State for Hamburger
 
   const isActive = (path) => location.pathname === path;
 
@@ -29,6 +33,14 @@ const Navbar = () => {
               flex-nowrap
             "
           >
+            {/* HAMBURGER ICON - Visible only on mobile */}
+            <li
+              className="sm:hidden text-white cursor-pointer p-1"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </li>
+
             <li className={itemStyle("/")} onClick={() => navigate("/")}>
               Home
             </li>
@@ -134,6 +146,23 @@ const Navbar = () => {
               )}
             </li>
           </ul>
+          {/* MOBILE DRAWER (The Toggle & Login inside Hamburger) */}
+          {mobileMenuOpen && (
+            <div className="absolute top-full left-0 mt--0.5 w-48 bg-slate-900 border border-white/10 rounded-2xl p-4 shadow-2xl flex flex-col gap-4 items-center sm:hidden animate-in fade-in zoom-in duration-200">
+              <div className="grid gap-4 w-full">
+                {" "}
+                {/* Changed grid to full width with gap */}
+                <span className="flex items-center justify-between w-full text-sm">
+                  Change theme
+                  <ThemeToggle />
+                </span>
+                <span className="flex items-center justify-between w-full text-sm">
+                  Login
+                  <Login />
+                </span>
+              </div>
+            </div>
+          )}
         </nav>
       </div>
     </div>

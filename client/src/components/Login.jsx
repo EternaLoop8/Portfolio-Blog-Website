@@ -57,7 +57,7 @@ const Login = () => {
   };
 
   return (
-    <div className="fixed flex justify-end top-6 right-3">
+    <div className="relative inline-block cursor-pointer">
       {/* PROFILE / LOGIN BUTTON */}
       <button
         onClick={() => (token ? setProfileOpen(!profileOpen) : setOpen(true))}
@@ -68,7 +68,7 @@ const Login = () => {
 
       {/* PROFILE DROPDOWN */}
       {profileOpen && token && (
-        <div className="absolute right-0 top-12 w-56 bg-neutral-900 text-white rounded-xl shadow-lg border border-neutral-800">
+        <div className="absolute right-0 top-12 w-56 bg-neutral-900 text-white rounded-xl shadow-lg border border-neutral-800 z-50">
           <div className="px-4 py-3 border-b border-neutral-800 text-sm">
             {userEmail}
           </div>
