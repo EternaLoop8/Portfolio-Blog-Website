@@ -66,7 +66,15 @@ const Navbar = () => {
               Contact
               {isOpen && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                  <div className="bg-slate-900 border border-white/10 rounded-xl shadow-2xl min-w-[180px]">
+                  <div
+                    className="
+                      bg-slate-900
+                      border border-white/10
+                      shadow-2xl
+                      rounded-md sm:rounded-xl
+                      min-w-30
+                      sm:min-w-45 "
+                  >
                     {/* GitHub */}
                     <a
                       href="https://github.com/EternaLoop8"

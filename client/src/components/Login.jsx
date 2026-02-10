@@ -96,7 +96,7 @@ const Login = () => {
       {/* LOGIN MODAL */}
       {open && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-neutral-900 text-white w-[380px] rounded-2xl p-6 relative">
+          <div className="bg-neutral-900 text-white w-95 rounded-2xl p-6 relative">
             <button
               onClick={() => setOpen(false)}
               className="absolute top-3 right-3 text-neutral-400 hover:text-white"

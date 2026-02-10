@@ -8,7 +8,7 @@ import ThemeToggle from '../components/ThemeToggle.jsx';
 const Home = () => {
   return (
     <div className='bg-black text-white'>
-      <div className="fixed top-6 right-14 z-50 flex items-center gap-4">
+      <div className="fixed top-6 right-14 z-50 flex items-center gap-4 ">
         <ThemeToggle />
         </div>
       <Login />
