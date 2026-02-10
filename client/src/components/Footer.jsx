@@ -14,7 +14,7 @@ const Footer = () => {
           directly to your inbox
         </h2>
 
-        <div>
+        <div className="sm:flex grid-cols-2 overflow-hidden">
           <form className="flex gap-3">
             <input 
                 type="email" 
