@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://portfolio-blog-website-lgpj.vercel.app/api",
 });
 
 // Add JWT automatically to all requests
