@@ -41,7 +41,7 @@ const Footer = () => {
           </p>
           <p
             className="cursor-pointer font-thin hover:text-gray-400 hover:underline"
-            onClick={() => navigate("/terms-conditions")}
+            onClick={() => navigate("/terms-and-conditions")}
           >
             Terms & Conditions
           </p>

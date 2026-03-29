@@ -20,8 +20,7 @@ const Editor = () => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [techStack, setTechStack] = useState("");
-  const [content, setContent] = useState(""); // This will hold the HTML string
-  const [docId, setDocId] = useState(null); // ✅ MUST BE HERE
+  const [docId, setDocId] = useState(null); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -44,11 +43,7 @@ const Editor = () => {
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       CustomCodeBlock,
     ],
-    content: "", // Initial content
-    // FIX: Update the 'content' state whenever the user types
-    onUpdate: ({ editor }) => {
-      setContent(editor.getHTML());
-    },
+    content: "",
     editorProps: {
       attributes: {
         class:
@@ -60,56 +55,50 @@ const Editor = () => {
   if (!editor) return null;
 
   const saveContent = async (status) => {
-    if (!title.trim()) return setError("Please enter a title");
-    if (editor.getText().trim().length === 0)
-      return setError("Content is required");
+  if (!title.trim()) return setError("Please enter a title");
+  if (editor.getText().trim().length === 0) return setError("Content is required");
 
-    setLoading(true);
-    setError("");
+  setLoading(true);
+  setError("");
 
-    const payload = {
-      title: title.trim(),
-      subtitle: subtitle.trim(),
-      content,
-      techStack: !isBlog
-        ? techStack
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean)
-        : undefined,
-    };
-
-    try {
-      let currentDocId = docId;
-
-      // 1️⃣ CREATE if not exists
-      if (!currentDocId) {
-        const res = await API.post(API_ENDPOINT, payload);
-        currentDocId = res.data._id;
-        setDocId(currentDocId); // keep state in sync
-      }
-
-      // 2️⃣ SAVE DRAFT
-      if (status === "draft") {
-        await API.put(`${API_ENDPOINT}/${currentDocId}`, payload);
-        alert("✅ Draft saved");
-        return;
-      }
-
-      // 3️⃣ PUBLISH
-      if (status === "published") {
-        await API.put(`${API_ENDPOINT}/${currentDocId}`, payload);
-        await API.patch(`${API_ENDPOINT}/${currentDocId}/publish`);
-        alert("🚀 Published");
-        navigate("/admin/dashboard");
-      }
-    } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || "Save failed");
-    } finally {
-      setLoading(false);
-    }
+  const payload = {
+    title: title.trim(),
+    subtitle: subtitle.trim(),
+    content: editor.getHTML(), // Get direct from editor to be safe
+    techStack: !isBlog
+      ? techStack.split(",").map((s) => s.trim()).filter(Boolean)
+      : undefined,
   };
+
+  try {
+    let currentDocId = docId;
+
+    // 1️⃣ CREATE: If we don't have an ID yet
+    if (!currentDocId) {
+      const res = await API.post(API_ENDPOINT, payload);
+      // NOTE: Project route returns { data: { _id } }, Blog might return { _id }
+      currentDocId = res.data.data?._id || res.data._id; 
+      setDocId(currentDocId);
+    }
+
+    // 2️⃣ UPDATE: Save the current state of the content
+    await API.put(`${API_ENDPOINT}/${currentDocId}`, payload);
+
+    // 3️⃣ PUBLISH: Only if the user clicked Publish
+    if (status === "published") {
+      await API.patch(`${API_ENDPOINT}/${currentDocId}/publish`);
+      alert("🚀 Published Successfully");
+      navigate("/admin/dashboard");
+    } else {
+      alert("✅ Draft Saved");
+    }
+  } catch (err) {
+    console.error("Save Error:", err);
+    setError(err.response?.data?.message || "Operation failed. Check console.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const Btn = ({ onClick, active, children, title }) => (
     <button

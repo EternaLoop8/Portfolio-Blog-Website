@@ -26,7 +26,7 @@ const Blogs = () => {
   const paginatedBlogs = blogs.slice(startIndex, startIndex + BLOGS_PER_PAGE);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12 bg-slate-950 text-slate-100 min-h-screen">
+    <div className=" mx-auto px-6 py-12 bg-slate-950 text-slate-100 min-h-screen">
       <h1 className="text-5xl md:text-6xl font-extrabold text-center mb-24 tracking-tight text-white">
         Posts
       </h1>
@@ -39,9 +39,17 @@ const Blogs = () => {
           <li key={blog._id} className="text-xl pl-2 group">
             <Link
               to={`/blogs/${blog._id}`}
-              className="text-slate-200 group-hover:text-blue-400 transition-colors duration-200 decoration-slate-700 underline-offset-4 hover:underline"
+              className="text-slate-200 group-hover:text-blue-400 transition-colors duration-200 decoration-slate-700 underline-offset-4"
             >
-              {blog.title}
+             <p>{blog.title}</p>
+              <span className="text-slate-600 no-underline text-sm">
+                    {" "}
+                    {new Date(blog.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
             </Link>
           </li>
         ))}

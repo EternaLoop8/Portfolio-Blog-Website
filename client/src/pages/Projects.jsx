@@ -28,7 +28,7 @@ const Projects = () => {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12 bg-slate-950 text-slate-100 min-h-screen">
+    <div className="mx-auto px-6 py-12 bg-slate-950 text-slate-100 min-h-screen">
       <h1 className="text-5xl md:text-6xl font-extrabold text-center mb-24 tracking-tight text-white">
         Projects
       </h1>
@@ -47,6 +47,15 @@ const Projects = () => {
                 <br />
                 <span className="text-slate-500 font-normal text-sm mt-1 block">
                   {project.techStack}
+                  {/* Added the date below */}
+                  <span className="text-slate-600">
+                    {" "}
+                    {new Date(project.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
                 </span>
               </div>
             </Link>
