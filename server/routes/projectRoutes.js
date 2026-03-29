@@ -6,7 +6,7 @@ import { adminOnly } from "../middleware/role.middleware.js";
 const projectrouter = express.Router();
 
 // Get all projects (Public)
-projectrouter.get('/', async (req, res) => {
+projectrouter.get('/project', async (req, res) => {
     try {
         const projects = await Project.find({});
         res.send({ count: projects.length, data: projects });
@@ -16,7 +16,7 @@ projectrouter.get('/', async (req, res) => {
 });
 
 // Get single project (Public)
-projectrouter.get('/:id', async (req, res) => {
+projectrouter.get('/project/:id', async (req, res) => {
     try {
         const response = await Project.findById(req.params.id);
         if (!response) return res.status(404).send({ message: "Project not found" });
@@ -27,7 +27,7 @@ projectrouter.get('/:id', async (req, res) => {
 });
 
 // Create project (Admin Only)
-projectrouter.post('/', protect, adminOnly, async (req, res) => {
+projectrouter.post('/project', protect, adminOnly, async (req, res) => {
     try {
         const { title, content } = req.body;
         if (!title || !content) return res.status(400).send({ message: "Title and content are required" });
@@ -43,7 +43,7 @@ projectrouter.post('/', protect, adminOnly, async (req, res) => {
 });
 
 // Update project (Admin Only)
-projectrouter.put('/:id', protect, adminOnly, async (req, res) => {
+projectrouter.put('/project/:id', protect, adminOnly, async (req, res) => {
     try {
         const response = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.send(response);
@@ -53,7 +53,7 @@ projectrouter.put('/:id', protect, adminOnly, async (req, res) => {
 });
 
 // Publish project (Admin Only)
-projectrouter.patch("/:id/publish", protect, adminOnly, async (req, res) => {
+projectrouter.patch("/project/:id/publish", protect, adminOnly, async (req, res) => {
     try {
         const project = await Project.findByIdAndUpdate(
             req.params.id,
@@ -67,7 +67,7 @@ projectrouter.patch("/:id/publish", protect, adminOnly, async (req, res) => {
 });
 
 // Delete project (Admin Only)
-projectrouter.delete('/:id', protect, adminOnly, async (req, res) => {
+projectrouter.delete('/project/:id', protect, adminOnly, async (req, res) => {
     try {
         await Project.findByIdAndDelete(req.params.id);
         res.send("success!");
